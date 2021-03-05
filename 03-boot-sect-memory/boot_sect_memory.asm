@@ -31,7 +31,7 @@ int 0x10
 ; 因为X保存在0x2d位置处，所以直接读取0x7C2d内存的数据就可以了
 mov al, "4"
 int 0x10
-mov al, [0x7C2C]
+mov al, [0x7C2d]
 int 0x10
 
 jmp $ ; 无限循环
