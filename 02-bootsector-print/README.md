@@ -36,7 +36,7 @@ dw 0xaa55
 你可以用`xxd file.bin`检查二进制数据
 
 不管怎样，你知道命令:
-`nasm -f bin boot_sec_print.asm -o boot_sec_print.bin`
-`qemu boot_sec_print.bin`
+`nasm -f bin boot_sect_print.asm -o boot_sect_print.bin`
+`qemu boot_sect_print.bin`
 
 你的引导扇区将输出"Hello"，并且进入无限循环
