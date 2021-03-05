@@ -1,6 +1,6 @@
-你需要预先谷歌的概念:linux,mac,terminal,compiler,emulator,nasm,qemu
+你需要通过谷歌预先了解的概念:linux,mac,terminal,compiler,emulator,nasm,qemu
 
-目标:安装用来运行教程所需要的软件
+**目标:安装用来运行教程所需要的软件**
 
 我使用Mac工作，尽管Linux更适合，因为Linux已经为你安装了所有的标准软件
 
