@@ -4,7 +4,7 @@
 
 我使用Mac工作，尽管Linux更适合，因为Linux已经为你安装了所有的标准软件
 
-在一台Mac上，[安装Homebrew]()，然后`brew install qemu nasm`
+在一台Mac上，[安装Homebrew](http://brew.sh/)，然后`brew install qemu nasm`
 
 不要使用Xcode开发者工具`nasm`，如果你已经安装了，在某些情况下，是不能工作的。总是使用`/usr/local/bin/nasm`
 
