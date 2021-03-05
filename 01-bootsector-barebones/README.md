@@ -16,6 +16,29 @@ e9 fd ff 00 00 00 00 00 00 00 00 00 00 00 00 00
 [ 29 more lines with sixteen zero-bytes each ]
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 55 aa
 ```
+基本上都是0，最后16位以`0xAA55`(需要注意大小端，x86是小端编码)，前3个字节表示无限跳转
 
+## 有史以来最简单的引导扇区
+你既可以把上面512个字节写入到二进制编辑器，也可以使用下面的汇编语言
+```armasm
+;无限循环(e9 fd ff)
+loop:
+    jmp loop
+
+;填充510个0
+times 510-($-$$) db 0
+;魔术数
+dw 0xaa55
+```
+
+编译：`nasm -f bin boot_sec_sample.asm -o boot_sec_sample.bin`
+>警告:如果有error，阅读[环境配置](../00-environment/README.md)
+
+我知道你非常期待想要尝试运行它，我也一样，所以淦
+`qemu boot_sec_sample.bin`
+
+>在某些操作系统，你必须运行`qemu-system-x86_64 boot-sec_sample.bin`,如果报SDL错误，尝试使用`--nographic`或者`--curses`变量
+
+你将看见一个窗口，上面除了 "Booting from Hard Disk..."， 什么也没有。你上一次看到一个无限循环是如此激动的时刻是什么时候？;-)
 
 
