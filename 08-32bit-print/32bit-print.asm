@@ -17,7 +17,7 @@ print_string_pm_loop:
 
     mov [edx], ax ; 保存 character + attribute 在 video memory
     add ebx, 1 ; 下一个字节
-    add ebx, 2 ; 下一个video memory 位置
+    add edx, 2 ; 下一个video memory 位置
 
     jmp print_string_pm_loop
 
