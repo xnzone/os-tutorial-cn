@@ -13,7 +13,7 @@ print_string_pm_loop:
     mov ah, WHITE_ON_BLACK
 
     cmp al, 0 ; 判断是否到string的结尾
-    je print_string_pm
+    je print_string_pm_done
 
     mov [edx], ax ; 保存 character + attribute 在 video memory
     add ebx, 1 ; 下一个字节
