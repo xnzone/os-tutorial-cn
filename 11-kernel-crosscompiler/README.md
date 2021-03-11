@@ -59,3 +59,10 @@ make install-target-libgcc
 你应该已经有了所有GNU二进制工具包和`/usr/local/i386elfgcc/bin`编译器，`i386-elf-`前缀是为了避免与系统编译器和二进制工具包冲突
 
 你可能想要把`$PATH`加入到`.bashrc`。从现在开始，在这个教程里面，当使用交叉编译的gcc的时候，我们将明确的使用前缀
+
+译者注：
+
+我在编译gcc过程中，遇到的一些问题，现在针对问题给出一些解决方案：
+- 解压压缩包会失败，解决方案是在windows下载好，解压后再上传到linux
+- 编译gcc的时候会出现`configure: error: Building GCC requires GMP 4.2+, MPFR 2.4.0+ and MPC 0.8.0+.`。这个可以按照提示，在命令行添加几个命令就可以；或者也可以安装一下`libmpc-dev`也可以解决
+- 编译的时候出现`make: execvp: <YOUR FILE NAME>: Permission denied …` 。需要赋权，执行命令`chmod  755 /path/to/yourfile`
