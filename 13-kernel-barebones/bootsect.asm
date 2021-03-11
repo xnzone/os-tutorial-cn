@@ -13,8 +13,8 @@ KERNEL_OFFSET equ 0x1000 ; 和我们使用的链接内核是一样的
     call switch_to_pm ; 禁用中断，加载GDT 等等，最终跳转到 'BEGIN_PM'
     jmp $ ; 永远不会执行
 
-%include "../05-bootsector-function-strings/boot_sect_print.asm"
-%include "../05-bootsector-function-strings/boot_sect_print_hex.asm"
+%include "../05-bootsector-functions-strings/boot_sect_print.asm"
+%include "../05-bootsector-functions-strings/boot_sect_print_hex.asm"
 %include "../07-bootsector-disk/boot_sect_disk.asm"
 %include "../09-32bit-gdt/32bit-gdt.asm"
 %include "../08-32bit-print/32bit-print.asm"
