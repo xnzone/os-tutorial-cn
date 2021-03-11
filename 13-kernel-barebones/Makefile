@@ -6,7 +6,7 @@
 all: run
 
 # Notice how dependencies are built as needed
-kernel.bin: kernel_entry.o kernel.one
+kernel.bin: kernel_entry.o kernel.o
 		i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
 kernel_entry.o: kernel_entry.asm
