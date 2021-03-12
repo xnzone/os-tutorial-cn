@@ -1,4 +1,4 @@
-; 从'd1'加载'dh'扇区到 ES:BX
+; 从'dl'加载'dh'扇区到 ES:BX
 disk_load:
   pusha
   ; 从磁盘上读取所有需要设置所有寄存器的数据

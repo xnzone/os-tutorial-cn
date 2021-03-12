@@ -1,3 +1,4 @@
+; 和第13节的启动扇区一样的，只是%included 文件修改了新的路径
 [org 0x7c00]
 KERNEL_OFFSET equ 0x1000 ; 和我们使用的链接内核是一样的
 
@@ -13,12 +14,12 @@ KERNEL_OFFSET equ 0x1000 ; 和我们使用的链接内核是一样的
     call switch_to_pm ; 禁用中断，加载GDT 等等，最终跳转到 'BEGIN_PM'
     jmp $ ; 永远不会执行
 
-%include "print.asm"
-%include "print_hex.asm"
-%include "disk.asm"
-%include "gdt.asm"
-%include "32bit-print.asm"
-%include "switch_pm.asm"
+%include "boot/print.asm"
+%include "boot/print_hex.asm"
+%include "boot/disk.asm"
+%include "boot/gdt.asm"
+%include "boot/32bit-print.asm"
+%include "boot/switch_pm.asm"
 
 [bits 16]
 load_kernel:
@@ -27,7 +28,7 @@ load_kernel:
     call print_nl
 
     mov bx, KERNEL_OFFSET ; 从硬盘读取并且保存在0x1000
-    mov dh, 2
+    mov dh, 16 ; 以后的内核可能会更大一点，这个数字设大一些
     mov dl, [BOOT_DRIVE]
     call disk_load
     ret
