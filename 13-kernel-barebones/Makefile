@@ -26,7 +26,7 @@ os-image.bin: bootsect.bin kernel.bin
 	cat $^ > $@
 
 run: os-image.bin
-	qemu-system-i386 --curses -fda $<
+	qemu-system-i386 -fda $<
 
 clean:
 	rm *.bin *.o *.dis

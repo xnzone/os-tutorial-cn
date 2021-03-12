@@ -5,7 +5,7 @@ OBJ = ${C_SOURCES:.c=.o}
 
 # Change this if your cross-compiler is somewhere else
 CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
-GDB = /usr/local/i386elfgcc/bin/i386-elf-GDB
+GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
 # -g: Use debuggin symbols in gcc
 CFLAGS = -g
 
@@ -22,11 +22,11 @@ kernel.elf: boot/kernel_entry.o ${OBJ}
 	i386-elf-ld -o $@ -Ttext 0x1000 $^
 
 run: os-image.bin
-	qemu-system-i386 --curses -fda os-image.bin
+	qemu-system-i386 -fda os-image.bin
 
 # Open the connection to qemu and load our kernel-object file with symbols
 debug: os-image.bin kernel.elf
-	qemu-system-i386 --s -fda os-image.bin &
+	qemu-system-i386 -s -fda os-image.bin &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 # Generic rules for wildcards
