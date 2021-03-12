@@ -1,26 +1,13 @@
-/**
- * 从指定的端口读取一个byte
- */
-unsigned char port_byte_in(unsigned short port) {
-    unsigned char result;
-    /**
-     * 内联汇编语言
-     * 注意源和目标寄存器被交换了
-     * '"=a" (result)' ; 设置寄存器 e'a'x的值给C语言变量'(result)'
-     * '"d" (port)' ; 把寄存器e'd'x和C语言变量'(port)' 匹配
-     * 输入和输出是分开的
-     */
-    __asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
-    return result;
-}
+#include "../drivers/ports.h"
 
-void port_byte_out(unsigned short port, unsigned char data) {
+void main() {
     /**
-     * 注意这里寄存器和C变量绑定了，没有结果输出。
-     * 所以不要再汇编语言里使用 '='
-     * 然而我们看代一个逗号，因为有两个变量在输入区，没有变量在返回区
+     * 屏幕光标位置：像VGA控制寄存器 (0x3d4)查询字节
+     * 14 = 光标高位字节 15 = 光标低位字节
      */
-    __asm__("out %%al, %%dx" : : "a" (data), "d" (port));
+    port_byte_out(0x3d4, 14);
+    /* VGA数据寄存器（0x3d5)返回的数据 */
+    int position = port_byte_in(0x3d5)
+    position = position << 8; /* 高位字节 */
+     
 }
-
-unsigned short port_word_in
