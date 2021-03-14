@@ -3,6 +3,8 @@
 #include "../drivers/screen.h"
 #include "../kernel/util.h"
 
+isr_t interrupt_handlers[256];
+
 /* 不要用循环做这个工作，因为我们需要每个函数名的地址 */
 void isr_install() {
     set_idt_gate(0, (u32)isr0);
@@ -37,6 +39,36 @@ void isr_install() {
     set_idt_gate(29, (u32)isr29);
     set_idt_gate(30, (u32)isr30);
     set_idt_gate(31, (u32)isr31);
+
+    // 重映射PIC
+    port_byte_out(0x20, 0x11);
+    port_byte_out(0xA0, 0x11);
+    port_byte_out(0x21, 0x20);
+    port_byte_out(0xA1, 0x28);
+    port_byte_out(0x21, 0x04);
+    port_byte_out(0xA1, 0x02);
+    port_byte_out(0x21, 0x01);
+    port_byte_out(0xA1, 0x01);
+    port_byte_out(0x21, 0x0);
+    port_byte_out(0xA1, 0x0); 
+
+    // 安装IRQs
+    set_idt_gate(32, (u32)irq0);
+    set_idt_gate(33, (u32)irq1);
+    set_idt_gate(34, (u32)irq2);
+    set_idt_gate(35, (u32)irq3);
+    set_idt_gate(36, (u32)irq4);
+    set_idt_gate(37, (u32)irq5);
+    set_idt_gate(38, (u32)irq6);
+    set_idt_gate(39, (u32)irq7);
+    set_idt_gate(40, (u32)irq8);
+    set_idt_gate(41, (u32)irq9);
+    set_idt_gate(42, (u32)irq10);
+    set_idt_gate(43, (u32)irq11);
+    set_idt_gate(44, (u32)irq12);
+    set_idt_gate(45, (u32)irq13);
+    set_idt_gate(46, (u32)irq14);
+    set_idt_gate(47, (u32)irq15);
 
     set_idt(); // 用ASM加载
 }
@@ -88,4 +120,21 @@ void isr_handler(register_t r) {
     kprint("\n");
     kprint(exception_messages[r.int_no]);
     kprint("\n");
+}
+
+void register_interrupt_handler(u8 n, isr_t handler) {
+    interrupt_handlers[n] = handler;
+}
+
+void irq_handler(register_t r) {
+    /* 每个中断之后，我们都学要发送一个EOI给PICs
+     * 否则，他们不会发送再次发送另一个中断 */
+    if(r.int_no >= 40) port_byte_out(0xA0, 0x20); /* 从PIC */
+    port_byte_out(0x20, 0x20); /* 主PIC */
+
+    /* 以一个模块化方式处理中断 */
+    if(interrupt_handlers[r.int_no] != 0) {
+        isr_t handler = interrupt_handlers[r.int_no];
+        handler(r);
+    }
 }
