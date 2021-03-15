@@ -7,7 +7,7 @@ void main() {
      */
     port_byte_out(0x3d4, 14);
     /* VGA数据寄存器（0x3d5)返回的数据 */
-    int position = port_byte_in(0x3d5)
+    int position = port_byte_in(0x3d5);
     position = position << 8; /* 高位字节 */
      
     port_byte_out(0x3d4, 15); /* 请求低字节 */
