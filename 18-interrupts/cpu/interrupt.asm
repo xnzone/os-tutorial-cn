@@ -167,6 +167,7 @@ isr14:
     jmp isr_common_stub
 
 ; 15: 恢复异常
+isr15:
     cli
     push byte 0
     push byte 15
