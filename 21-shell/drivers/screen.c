@@ -64,7 +64,7 @@ void kprint_backspace() {
  * 设置视频光标，并且返回偏移值
  */
 int print_char(char c, int col, int row, char attr) {
-    unsigned char* vidmem = (unsigned char*)VIDEO_ADDRESS;
+    u8* vidmem = (u8*)VIDEO_ADDRESS;
     if(!attr) attr = WHITE_ON_BLACK;
 
     /* 错误控制，如果坐标不对，打印一个红色的'E' */
@@ -81,6 +81,9 @@ int print_char(char c, int col, int row, char attr) {
     if(c == '\n') {
         row = get_offset_row(offset);
         offset = get_offset(0, row + 1);
+    } else if (c == 0x08) { /* backspace */
+        vidmem[offset] = ' ';
+        vidmem[offset+1] = attr;
     } else {
         vidmem[offset] = c;
         vidmem[offset+1] = attr;
@@ -123,9 +126,9 @@ void set_cursor_offset(int offset) {
     /* 和get_cursor_offset类似，但是不是读 */
     offset /= 2;
     port_byte_out(REG_SCREEN_CTRL, 14);
-    port_byte_out(REG_SCREEN_DATA, (unsigned char)(offset >> 8));
+    port_byte_out(REG_SCREEN_DATA, (u8)(offset >> 8));
     port_byte_out(REG_SCREEN_CTRL, 15);
-    port_byte_out(REG_SCREEN_DATA, (unsigned char)(offset & 0xff));
+    port_byte_out(REG_SCREEN_DATA, (u8)(offset & 0xff));
 }
 
 void clear_screen() {
