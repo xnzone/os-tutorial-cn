@@ -14,7 +14,7 @@ hex_loop:
 
     ; 1. 把dx最后字节转换成ASCII
     mov ax, dx ; 使用'ax'作为工作寄存器
-    add ax, 0x000f ; 0x1234 -> 0x0004 通过把前三位置0
+    and ax, 0x000f ; 0x1234 -> 0x0004 通过把前三位置0
     add al, 0x30 ; 把0x30加到N上，把ASCII码转成"N"
     cmp al, 0x39 ; 如果大于9，再加8，来代表'A'到'F'
     jle step2

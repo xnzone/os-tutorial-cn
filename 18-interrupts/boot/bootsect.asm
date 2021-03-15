@@ -28,7 +28,7 @@ load_kernel:
     call print_nl
 
     mov bx, KERNEL_OFFSET ; 从硬盘读取并且保存在0x1000
-    mov dh, 16 ; 以后的内核可能会更大一点，这个数字设大一些
+    mov dh, 31 ; 以后的内核可能会更大一点，这个数字设大一些
     mov dl, [BOOT_DRIVE]
     call disk_load
     ret
@@ -42,9 +42,9 @@ BEGIN_PM:
     jmp $ ; 当内核返回控制权给我们的时候，停在这里
 
 BOOT_DRIVE db 0 ; 在内存中保存是一个好主意。因为 'dl'可能会被覆盖
-MSG_REAL_MODE db 'Started in 16-bit Real Mode', 0
-MSG_PROT_MODE db 'Landed in 32-bit Protected Mode', 0
-MSG_LOAD_KERNEL db 'Loading kernel into memory', 0
+MSG_REAL_MODE db "Started in 16-bit Real Mode", 0
+MSG_PROT_MODE db "Landed in 32-bit Protected Mode", 0
+MSG_LOAD_KERNEL db "Loading kernel into memory", 0
 
 ; padding
 times 510-($-$$) db 0
