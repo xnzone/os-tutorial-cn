@@ -115,7 +115,7 @@ char *exception_messages[] = {
 void isr_handler(register_t r) {
     kprint("received interrupt: ");
     char s[3];
-    int_to_acsii(r.int_no, s);
+    int_to_ascii(r.int_no, s);
     kprint(s);
     kprint("\n");
     kprint(exception_messages[r.int_no]);
