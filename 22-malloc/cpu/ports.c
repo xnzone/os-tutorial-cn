@@ -6,7 +6,7 @@ u8 port_byte_in(u16 port) {
     return result;
 }
 
-void port_byte_out(u16 port u8 data) {
+void port_byte_out(u16 port, u8 data) {
     __asm__ __volatile__("out %%al, %%dx" : : "a" (data), "d" (port));
 }
 
