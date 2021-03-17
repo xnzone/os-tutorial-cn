@@ -36,7 +36,7 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
-/* IRQ定义 */
+/* IRQ definitions */
 extern void irq0();
 extern void irq1();
 extern void irq2();
@@ -77,14 +77,13 @@ typedef struct {
     u32 edi, esi, ebp, esp, ebx, edx, ecx, eax; /* pushed by pusha */
     u32 int_no, err_code; /* 中断号和错误码(如果有的话) */
     u32 eip, cs, eflags, useresp, ss; /* pushed by processor automaticall */
-} register_t;
-
+} registers_t;
 
 void isr_install();
-void isr_handler(register_t r);
+void isr_handler(registers_t r);
 void irq_install();
 
-typedef void (*isr_t)(register_t);
+typedef void (*isr_t)(registers_t);
 void register_interrupt_handler(u8 n, isr_t handler);
 
 #endif

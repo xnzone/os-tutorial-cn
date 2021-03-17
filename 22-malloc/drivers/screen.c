@@ -2,7 +2,7 @@
 #include "../cpu/ports.h"
 #include "../libc/mem.h"
 
-/* Declaration of private functions */
+/* 私有函数声明 */
 int get_cursor_offset();
 void set_cursor_offset(int offset);
 int print_char(char c, int col, int row, char attr);
@@ -10,13 +10,13 @@ int get_offset(int col, int row);
 int get_offset_row(int offset);
 int get_offset_col(int offset);
 
-/**********************************************************
- * Public Kernel API functions                            *
- **********************************************************/
+/*****************
+ * 公有内核API函数 *
+ *****************/
 
 /**
- * Print a message on the specified location
- * If col, row, are negative, we will use the current offset
+ * 打印一个信息在指定位置
+ * 如果col, row为负数，我们将使用当前的偏移
  */
 void kprint_at(char *message, int col, int row) {
     /* Set cursor if col/row are negative */
@@ -29,11 +29,11 @@ void kprint_at(char *message, int col, int row) {
         col = get_offset_col(offset);
     }
 
-    /* Loop through message and print it */
+    /* 循环message，并打印 */
     int i = 0;
     while (message[i] != 0) {
         offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
-        /* Compute row/col for next iteration */
+        /* 计算下一次迭代的row/col */
         row = get_offset_row(offset);
         col = get_offset_col(offset);
     }
@@ -51,24 +51,24 @@ void kprint_backspace() {
 }
 
 
-/**********************************************************
- * Private kernel functions                               *
- **********************************************************/
+/**************
+ * 私有内核函数 *
+ **************/
 
 
 /**
- * Innermost print function for our kernel, directly accesses the video memory 
- *
- * If 'col' and 'row' are negative, we will print at current cursor location
- * If 'attr' is zero it will use 'white on black' as default
- * Returns the offset of the next character
- * Sets the video cursor to the returned offset
+ * 为内核准备的内部打印函数，直接获取视频内存
+ * 
+ * 如果'col'和'row'是负数，将在当前光标位置打印
+ * 如果'attr'是0，将使用'white on black'作为默认值
+ * 返回下一个字节的偏移
+ * 设置视频光标，并且返回偏移值
  */
 int print_char(char c, int col, int row, char attr) {
     u8 *vidmem = (u8*) VIDEO_ADDRESS;
     if (!attr) attr = WHITE_ON_BLACK;
 
-    /* Error control: print a red 'E' if the coords aren't right */
+    /* 错误控制，如果坐标不对，打印一个红色的'E' */
     if (col >= MAX_COLS || row >= MAX_ROWS) {
         vidmem[2*(MAX_COLS)*(MAX_ROWS)-2] = 'E';
         vidmem[2*(MAX_COLS)*(MAX_ROWS)-1] = RED_ON_WHITE;
@@ -91,7 +91,7 @@ int print_char(char c, int col, int row, char attr) {
         offset += 2;
     }
 
-    /* Check if the offset is over screen size and scroll */
+    /* 检查偏移是否超过了屏幕尺寸，且滚动 */
     if (offset >= MAX_ROWS * MAX_COLS * 2) {
         int i;
         for (i = 1; i < MAX_ROWS; i++) 
@@ -99,7 +99,7 @@ int print_char(char c, int col, int row, char attr) {
                         (u8*)(get_offset(0, i-1) + VIDEO_ADDRESS),
                         MAX_COLS * 2);
 
-        /* Blank last line */
+        /* 最后一行空着 */
         char *last_line = (char*) (get_offset(0, MAX_ROWS-1) + (u8*) VIDEO_ADDRESS);
         for (i = 0; i < MAX_COLS * 2; i++) last_line[i] = 0;
 
@@ -111,19 +111,19 @@ int print_char(char c, int col, int row, char attr) {
 }
 
 int get_cursor_offset() {
-    /* Use the VGA ports to get the current cursor position
-     * 1. Ask for high byte of the cursor offset (data 14)
-     * 2. Ask for low byte (data 15)
+    /* 使用VGA端口获取当前光标位置
+     * 1. 查询光标高位（data 14）
+     * 2. 查询低位(data 15)
      */
     port_byte_out(REG_SCREEN_CTRL, 14);
-    int offset = port_byte_in(REG_SCREEN_DATA) << 8; /* High byte: << 8 */
+    int offset = port_byte_in(REG_SCREEN_DATA) << 8; /* 高位， 左移 8 */
     port_byte_out(REG_SCREEN_CTRL, 15);
     offset += port_byte_in(REG_SCREEN_DATA);
-    return offset * 2; /* Position * size of character cell */
+    return offset * 2; /* 位置 * 字节单元大小 */
 }
 
 void set_cursor_offset(int offset) {
-    /* Similar to get_cursor_offset, but instead of reading we write data */
+    /* 和get_cursor_offset类似，但是不是读 */
     offset /= 2;
     port_byte_out(REG_SCREEN_CTRL, 14);
     port_byte_out(REG_SCREEN_DATA, (u8)(offset >> 8));

@@ -10,7 +10,6 @@ int get_offset(int col, int row);
 int get_offset_row(int offset);
 int get_offset_col(int offset);
 
-
 /*****************
  * 公有内核API函数 *
  *****************/
@@ -19,12 +18,12 @@ int get_offset_col(int offset);
  * 打印一个信息在指定位置
  * 如果col, row为负数，我们将使用当前的偏移
  */
-void kprint_at(char* message, int col, int row) {
-    /* 如果col/row是负数，设置光标  */
+void kprint_at(char *message, int col, int row) {
+    /* Set cursor if col/row are negative */
     int offset;
-    if (col >= 0 && row >= 0) {
+    if (col >= 0 && row >= 0)
         offset = get_offset(col, row);
-    } else {
+    else {
         offset = get_cursor_offset();
         row = get_offset_row(offset);
         col = get_offset_col(offset);
@@ -32,7 +31,7 @@ void kprint_at(char* message, int col, int row) {
 
     /* 循环message，并打印 */
     int i = 0;
-    while(message[i] != 0) {
+    while (message[i] != 0) {
         offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
         /* 计算下一次迭代的row/col */
         row = get_offset_row(offset);
@@ -40,20 +39,22 @@ void kprint_at(char* message, int col, int row) {
     }
 }
 
-void kprint(char* meesage) {
-    kprint_at(meesage, -1, -1);
+void kprint(char *message) {
+    kprint_at(message, -1, -1);
 }
 
 void kprint_backspace() {
-    int offset = get_cursor_offset() - 2;
+    int offset = get_cursor_offset()-2;
     int row = get_offset_row(offset);
     int col = get_offset_col(offset);
     print_char(0x08, col, row, WHITE_ON_BLACK);
 }
 
+
 /**************
  * 私有内核函数 *
  **************/
+
 
 /**
  * 为内核准备的内部打印函数，直接获取视频内存
@@ -64,24 +65,24 @@ void kprint_backspace() {
  * 设置视频光标，并且返回偏移值
  */
 int print_char(char c, int col, int row, char attr) {
-    u8* vidmem = (u8*)VIDEO_ADDRESS;
-    if(!attr) attr = WHITE_ON_BLACK;
+    u8 *vidmem = (u8*) VIDEO_ADDRESS;
+    if (!attr) attr = WHITE_ON_BLACK;
 
     /* 错误控制，如果坐标不对，打印一个红色的'E' */
-    if(col >= MAX_COLS || row >= MAX_ROWS) {
+    if (col >= MAX_COLS || row >= MAX_ROWS) {
         vidmem[2*(MAX_COLS)*(MAX_ROWS)-2] = 'E';
         vidmem[2*(MAX_COLS)*(MAX_ROWS)-1] = RED_ON_WHITE;
         return get_offset(col, row);
     }
 
     int offset;
-    if(col >= 0 && row >= 0) offset = get_offset(col, row);
+    if (col >= 0 && row >= 0) offset = get_offset(col, row);
     else offset = get_cursor_offset();
 
-    if(c == '\n') {
+    if (c == '\n') {
         row = get_offset_row(offset);
-        offset = get_offset(0, row + 1);
-    } else if (c == 0x08) { /* backspace */
+        offset = get_offset(0, row+1);
+    } else if (c == 0x08) { /* Backspace */
         vidmem[offset] = ' ';
         vidmem[offset+1] = attr;
     } else {
@@ -93,17 +94,16 @@ int print_char(char c, int col, int row, char attr) {
     /* 检查偏移是否超过了屏幕尺寸，且滚动 */
     if (offset >= MAX_ROWS * MAX_COLS * 2) {
         int i;
-        for(i = 1; i < MAX_ROWS; i++) {
-            memory_copy((u8*)get_offset(0, i) + VIDEO_ADDRESS,
-            (u8*)get_offset(0, i-1) + VIDEO_ADDRESS,
-            MAX_COLS * 2);
+        for (i = 1; i < MAX_ROWS; i++) 
+            memory_copy((u8*)(get_offset(0, i) + VIDEO_ADDRESS),
+                        (u8*)(get_offset(0, i-1) + VIDEO_ADDRESS),
+                        MAX_COLS * 2);
 
-            /* 最后一行空着 */
-            char* last_line = (char*)get_offset(0, MAX_ROWS - 1) + VIDEO_ADDRESS;
-            for(i = 0; i < MAX_COLS * 2; i++) last_line[i] = 0;
+        /* 最后一行空着 */
+        char *last_line = (char*) (get_offset(0, MAX_ROWS-1) + (u8*) VIDEO_ADDRESS);
+        for (i = 0; i < MAX_COLS * 2; i++) last_line[i] = 0;
 
-            offset -= 2 * MAX_COLS;
-        }
+        offset -= 2 * MAX_COLS;
     }
 
     set_cursor_offset(offset);
@@ -132,25 +132,18 @@ void set_cursor_offset(int offset) {
 }
 
 void clear_screen() {
-    int screen_size = MAX_ROWS * MAX_COLS;
+    int screen_size = MAX_COLS * MAX_ROWS;
     int i;
-    u8* screen = (u8*)VIDEO_ADDRESS;
+    u8 *screen = (u8*) VIDEO_ADDRESS;
 
-    for(i = 0; i < screen_size; i++) {
+    for (i = 0; i < screen_size; i++) {
         screen[i*2] = ' ';
         screen[i*2+1] = WHITE_ON_BLACK;
     }
-    set_cursor_offset(get_offset(0,0));
+    set_cursor_offset(get_offset(0, 0));
 }
 
-int get_offset(int col, int row) {
-    return 2 * (row * MAX_COLS + col);
-}
 
-int get_offset_row(int offset) {
-    return offset / (2 * MAX_COLS);
-}
-
-int get_offset_col(int offset) {
-    return (offset - (get_offset_row(offset) * 2 * MAX_COLS)) / 2;
-}
+int get_offset(int col, int row) { return 2 * (row * MAX_COLS + col); }
+int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
+int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }

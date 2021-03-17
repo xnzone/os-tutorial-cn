@@ -25,7 +25,7 @@ const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
         'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
 
 static void keyboard_callback(registers_t regs) {
-    /* The PIC leaves us the scancode in port 0x60 */
+    /* PIC 把扫描码保存在0x60端口 */
     u8 scancode = port_byte_in(0x60);
     
     if (scancode > SC_MAX) return;
@@ -34,11 +34,11 @@ static void keyboard_callback(registers_t regs) {
         kprint_backspace();
     } else if (scancode == ENTER) {
         kprint("\n");
-        user_input(key_buffer); /* kernel-controlled function */
+        user_input(key_buffer); /* 内核控制的函数 */
         key_buffer[0] = '\0';
     } else {
         char letter = sc_ascii[(int)scancode];
-        /* Remember that kprint only accepts char[] */
+        /* 记住kprint只接受char[] */
         char str[2] = {letter, '\0'};
         append(key_buffer, letter);
         kprint(str);

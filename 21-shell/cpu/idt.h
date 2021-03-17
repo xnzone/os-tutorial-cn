@@ -31,9 +31,7 @@ typedef struct {
 idt_gate_t idt[IDT_ENTRIES];
 idt_register_t idt_reg;
 
-
 /* 在idt.c实现的函数 */
 void set_idt_gate(int n, u32 handler);
 void set_idt();
-
 #endif

@@ -115,10 +115,10 @@ isr0:
 
 ; 1: 调试异常
 isr1:
-   cli
-   push byte 0
-   push byte 1
-   jmp isr_common_stub
+    cli
+    push byte 0
+    push byte 1
+    jmp isr_common_stub
 
 ; 2: 无掩码中断异常
 isr2:
@@ -240,96 +240,96 @@ isr19:
     push byte 19
     jmp isr_common_stub
 
-; 20: 恢复
+; 20: Reserved
 isr20:
     cli
     push byte 0
     push byte 20
     jmp isr_common_stub
 
-; 21: 恢复
+; 21: Reserved
 isr21:
     cli
     push byte 0
     push byte 21
     jmp isr_common_stub
 
-; 22: 恢复
+; 22: Reserved
 isr22:
     cli
     push byte 0
     push byte 22
     jmp isr_common_stub
 
-; 23: 恢复
+; 23: Reserved
 isr23:
     cli
     push byte 0
     push byte 23
     jmp isr_common_stub
 
-; 24: 恢复
+; 24: Reserved
 isr24:
     cli
     push byte 0
     push byte 24
     jmp isr_common_stub
 
-; 25: 恢复
+; 25: Reserved
 isr25:
     cli
     push byte 0
     push byte 25
     jmp isr_common_stub
 
-; 26: 恢复
+; 26: Reserved
 isr26:
     cli
     push byte 0
     push byte 26
     jmp isr_common_stub
 
-; 27: 恢复
+; 27: Reserved
 isr27:
     cli
     push byte 0
     push byte 27
     jmp isr_common_stub
 
-; 28: 恢复
+; 28: Reserved
 isr28:
     cli
     push byte 0
     push byte 28
     jmp isr_common_stub
 
-; 29: 恢复
+; 29: Reserved
 isr29:
     cli
     push byte 0
     push byte 29
     jmp isr_common_stub
 
-; 30: 恢复
+; 30: Reserved
 isr30:
     cli
     push byte 0
     push byte 30
     jmp isr_common_stub
 
-; 31: 恢复
+; 31: Reserved
 isr31:
     cli
     push byte 0
     push byte 31
     jmp isr_common_stub
 
-; IRQ 处理器
+; IRQ handlers
 irq0:
-    cli
-    push byte 0
-    push byte 32
-    jmp irq_common_stub
+	cli
+	push byte 0
+	push byte 32
+	jmp irq_common_stub
 
 irq1:
 	cli

@@ -1,6 +1,8 @@
 #ifndef TYPE_H
 #define TYPE_H
 
+/* 不是使用 'chars'分配非字符字节
+ * 我们将使用这些没有语义的新类型 */
 typedef unsigned int    u32;
 typedef          int    s32;
 typedef unsigned short  u16;

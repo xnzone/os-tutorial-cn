@@ -8,8 +8,7 @@
 
 isr_t interrupt_handlers[256];
 
-/* Can't do this with a loop because we need the address
- * of the function names */
+/* 不要用循环做这个工作，因为我们需要每个函数名的地址 */
 void isr_install() {
     set_idt_gate(0, (u32)isr0);
     set_idt_gate(1, (u32)isr1);
@@ -44,7 +43,7 @@ void isr_install() {
     set_idt_gate(30, (u32)isr30);
     set_idt_gate(31, (u32)isr31);
 
-    // Remap the PIC
+    // 重映射PIC
     port_byte_out(0x20, 0x11);
     port_byte_out(0xA0, 0x11);
     port_byte_out(0x21, 0x20);
@@ -56,7 +55,7 @@ void isr_install() {
     port_byte_out(0x21, 0x0);
     port_byte_out(0xA1, 0x0); 
 
-    // Install the IRQs
+    // 安装IRQs
     set_idt_gate(32, (u32)irq0);
     set_idt_gate(33, (u32)irq1);
     set_idt_gate(34, (u32)irq2);
@@ -74,10 +73,10 @@ void isr_install() {
     set_idt_gate(46, (u32)irq14);
     set_idt_gate(47, (u32)irq15);
 
-    set_idt(); // Load with ASM
+    set_idt(); // 用ASM加载
 }
 
-/* To print the message which defines every exception */
+/* 为了打印定义每个错误的信息 */
 char *exception_messages[] = {
     "Division By Zero",
     "Debug",
@@ -131,9 +130,12 @@ void register_interrupt_handler(u8 n, isr_t handler) {
 }
 
 void irq_handler(registers_t r) {
+    /* 每个中断之后，我们都学要发送一个EOI给PICs
+     * 否则，他们不会发送再次发送另一个中断 */
     if(r.int_no >= 40) port_byte_out(0xA0, 0x20);
     port_byte_out(0x20, 0x20);
 
+    /* 以一个模块化方式处理中断 */
     if (interrupt_handlers[r.int_no] != 0) {
         isr_t handler = interrupt_handlers[r.int_no];
         handler(r);
@@ -141,7 +143,10 @@ void irq_handler(registers_t r) {
 }
 
 void irq_install() {
+    /* 开启中断 */
     asm volatile("sti");
+    /* IRQ0：定时器 */
     init_timer(50);
+    /* IRQ1: 键盘 */
     init_keyboard();
 }

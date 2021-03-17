@@ -22,15 +22,15 @@ void port_byte_out(u16 port, u8 data) {
      * 所以不要再汇编语言里使用 '='
      * 然而我们看代一个逗号，因为有两个变量在输入区，没有变量在返回区
      */
-    __asm__("out %%al, %%dx" : : "a" (data), "d" (port));
+    __asm__ __volatile__("out %%al, %%dx" : : "a" (data), "d" (port));
 }
 
-u16 port_word_in(u16 port) {
+u16 port_word_in (u16 port) {
     u16 result;
     __asm__("in %%dx, %%ax" : "=a" (result) : "d" (port));
     return result;
 }
 
-void port_word_out(u16 port, u16 data) {
-    __asm__("out %%ax, %%dx" : : "a" (data), "d" (port));
+void port_word_out (u16 port, u16 data) {
+    __asm__ __volatile__("out %%ax, %%dx" : : "a" (data), "d" (port));
 }
