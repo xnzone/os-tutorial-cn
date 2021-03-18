@@ -1,7 +1,7 @@
 #ifndef ISR_H
 #define ISR_H
 
-#include "type.h"
+#include <stdint.h>
 
 /* ISRs reserved for CPU exceptions */
 extern void isr0();
@@ -83,7 +83,7 @@ void isr_install();
 void isr_handler(registers_t *r);
 void irq_install();
 
-typedef void (*isr_t)(registers_t);
-void register_interrupt_handler(u8 n, isr_t handler);
+typedef void (*isr_t)(registers_t*);
+void register_interrupt_handler(uint8_t n, isr_t handler);
 
 #endif
