@@ -22,8 +22,7 @@
         "katex",
         "prism-themes",
         "theme-vue@git+https://github.com/xnzone/gitbook-plugin-theme-vue.git#0.0.1",
-        "valine",
-        "push-bd"
+        "valine"
     ],
     "pluginsConfig": {
         "prism": {
