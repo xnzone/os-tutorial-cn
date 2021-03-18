@@ -13,12 +13,14 @@ isr_common_stub:
     mov es, ax
     mov fs, ax
     mov gs, ax
+    push esp ; registers_t *r
 
     ; 2. 调用C处理
     cld
     call isr_handler
 
     ; 3. 恢复状态
+    pop eax
     pop eax
     mov ds, ax
     mov es, ax
@@ -39,9 +41,11 @@ irq_common_stub:
     mov es, ax
     mov fs, ax
     mov gs, ax
+    push esp
     cld
     call irq_handler ; 与ISR代码不同
     pop ebx ; 与ISR代码不同
+    pop ebx
     mov ds, bx
     mov es, bx
     mov fs, bx
