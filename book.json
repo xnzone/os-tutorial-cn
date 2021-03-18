@@ -25,6 +25,10 @@
         "valine"
     ],
     "pluginsConfig": {
+        "drainage": {
+            "height": "274",
+            "width": "360"
+        },
         "prism": {
             "css": [
                 "prismjs/themes/prism-okaidia.css"
