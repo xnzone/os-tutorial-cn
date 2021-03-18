@@ -1,0 +1,12 @@
+{
+    "name": "xnzone",
+    "version": "1.0.0",
+    "engines": {
+        "node": "10.x"
+    },
+    "scripts": {
+        "build": "npm install -g npm && npm install gitbook-cli -g && gitbook install && gitbook build && mv _book public"
+    },
+    "author": "xnzone",
+    "license": "ISC"
+}
